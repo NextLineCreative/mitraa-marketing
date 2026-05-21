@@ -1,0 +1,187 @@
+import type { Metadata } from 'next';
+import LegalDoc from '@/components/LegalDoc';
+import { EMAILS, LEGAL, SITE } from '@/lib/constants';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description: `How ${SITE.brand} collects, uses, and protects your personal data.`,
+};
+
+const EFFECTIVE = '21 May 2026';
+const UPDATED = '21 May 2026';
+
+export default function PrivacyPage() {
+  return (
+    <LegalDoc title="Privacy Policy" effectiveDate={EFFECTIVE} lastUpdated={UPDATED}>
+      <p>
+        This Privacy Policy explains how <strong>{LEGAL.companyName}</strong>{' '}
+        (&ldquo;Mitraa&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) collects, uses,
+        shares, and safeguards information when you use the Mitraa mobile application,
+        our website at <code>mitraa.shop</code> and its subdomains, and any related
+        services (collectively, the <strong>&ldquo;Service&rdquo;</strong>).
+      </p>
+      <p>
+        This policy is published in accordance with the Information Technology Act,
+        2000 and the Information Technology (Reasonable Security Practices and
+        Procedures and Sensitive Personal Data or Information) Rules, 2011, as well
+        as the Digital Personal Data Protection Act, 2023 (when in force).
+      </p>
+
+      <h2>1. Who we are</h2>
+      <p>
+        Mitraa is operated by <strong>{LEGAL.companyName}</strong>, a company
+        organised under the laws of India, with registered office at{' '}
+        <strong>{LEGAL.registeredAddress}</strong>. Our Grievance Officer can be
+        contacted at <a href={`mailto:${EMAILS.grievance}`}>{EMAILS.grievance}</a>.
+      </p>
+
+      <h2>2. Information we collect</h2>
+
+      <h3>2.1 Information you provide</h3>
+      <ul>
+        <li><strong>Account information</strong> — your phone number (verified via one-time password), display name, profile photo, gender, date of birth, language preference, and bio.</li>
+        <li><strong>Host application data</strong> (only if you apply to become a host) — additional profile photos, an introduction video, languages spoken, tags describing your interests, your per-minute call rate, and government-issued identification we may request for verification.</li>
+        <li><strong>Payment information</strong> — for coin purchases, payment is processed by Razorpay. We receive transaction references but do not store your full card number, UPI PIN, or net-banking credentials.</li>
+        <li><strong>Payout information</strong> (hosts only) — UPI ID or bank account details for receiving withdrawals.</li>
+        <li><strong>Content you share</strong> — chat messages, gifts, and any media you upload.</li>
+        <li><strong>Reports and feedback</strong> — content you submit when reporting another user.</li>
+      </ul>
+
+      <h3>2.2 Information collected automatically</h3>
+      <ul>
+        <li><strong>Device information</strong> — device model, operating system version, application version, language and region settings, mobile network and carrier, and a generated installation identifier.</li>
+        <li><strong>Usage information</strong> — screens viewed, features used, call duration, time and date of activity, error and crash logs.</li>
+        <li><strong>Network information</strong> — IP address, approximate location derived from IP, and connection type.</li>
+        <li><strong>Push notification token</strong> — provided by Firebase Cloud Messaging so we can send you alerts.</li>
+      </ul>
+
+      <h3>2.3 Information we do not collect</h3>
+      <ul>
+        <li>We do not record voice or video calls. Calls are real-time only, transported by Agora.</li>
+        <li>We do not access your precise GPS location.</li>
+        <li>We do not read your contacts, SMS, or call logs.</li>
+      </ul>
+
+      <h2>3. Permissions we request on your device</h2>
+      <ul>
+        <li><strong>Phone state / SMS</strong> — only to auto-fill the OTP during sign-in (optional).</li>
+        <li><strong>Microphone</strong> — required for voice and video calls.</li>
+        <li><strong>Camera</strong> — required for video calls and to capture profile / host photos.</li>
+        <li><strong>Photo library</strong> — to upload profile pictures and chat media.</li>
+        <li><strong>Notifications</strong> — to alert you about incoming calls, messages, and account events.</li>
+      </ul>
+      <p>You can revoke any of these at any time from your device settings. Some features depending on a revoked permission will stop working.</p>
+
+      <h2>4. How we use your information</h2>
+      <p>We process your data to:</p>
+      <ul>
+        <li>create and operate your account, authenticate you via OTP, and keep your session secure;</li>
+        <li>connect you with hosts and other users for voice / video calls and chat;</li>
+        <li>process coin purchases and manage your wallet balance;</li>
+        <li>process host payouts subject to applicable taxes (including TDS where required);</li>
+        <li>moderate the platform, review reports, and enforce our Terms of Service;</li>
+        <li>send transactional notifications (OTP, recharge success, missed calls, gift received, withdrawal status);</li>
+        <li>improve product quality and diagnose errors;</li>
+        <li>comply with applicable law, court orders, and lawful government requests.</li>
+      </ul>
+
+      <h2>5. Legal bases for processing</h2>
+      <p>Where applicable data-protection law requires us to have a legal basis, we rely on: (a) the contract between you and us to provide the Service; (b) your consent for optional features such as push notifications; (c) our legitimate interest in operating, securing, and improving the Service; and (d) compliance with our legal obligations.</p>
+
+      <h2>6. Sharing of information</h2>
+      <p>We share data only with the parties below and only as needed.</p>
+      <ul>
+        <li>
+          <strong>Other users</strong> — your display name, avatar, host profile
+          fields, and the gifts and messages you send are visible to the people you
+          communicate with.
+        </li>
+        <li>
+          <strong>Service providers</strong>
+          <ul>
+            <li>Firebase (Google) — phone OTP verification, push notifications, crash analytics.</li>
+            <li>Agora — real-time voice and video transport (we do not record calls).</li>
+            <li>Razorpay — payment processing for coin purchases.</li>
+            <li>Amazon Web Services — hosting of our servers and storage of profile / chat media in India region (<code>ap-south-1</code>).</li>
+            <li>SMS providers used by Firebase for OTP delivery.</li>
+          </ul>
+          Each processor handles your data only on our instructions and under written contracts.
+        </li>
+        <li><strong>Law enforcement and authorities</strong> — when required by a valid legal request under Indian law, after appropriate review.</li>
+        <li><strong>In a corporate transaction</strong> — if Mitraa is acquired, merged, or its assets are transferred, your data may be transferred to the successor entity, subject to this Policy.</li>
+      </ul>
+      <p>We do <strong>not</strong> sell your personal information.</p>
+
+      <h2>7. International transfers</h2>
+      <p>Our primary infrastructure is in India (AWS Mumbai, <code>ap-south-1</code>). Some service providers (Google, Agora) may process limited data outside India. When this happens, we ensure appropriate contractual safeguards.</p>
+
+      <h2>8. Data retention</h2>
+      <ul>
+        <li>Account data: kept while your account is active and for up to 180 days after deletion, unless a longer period is required by law (for example, tax records are kept for 7 years).</li>
+        <li>Transaction records: 7 years (as required under the Income Tax Act).</li>
+        <li>Chat messages: retained on your device and on our servers as long as either party has not deleted them; the platform may purge messages older than 12 months.</li>
+        <li>Call records: metadata (caller, host, duration, charges) retained for 3 years; call audio/video is never recorded.</li>
+        <li>Logs and analytics: aggregated and de-identified after 90 days.</li>
+      </ul>
+
+      <h2>9. Your rights</h2>
+      <p>Subject to applicable law, you may:</p>
+      <ul>
+        <li>access the personal information we hold about you;</li>
+        <li>correct inaccurate information through the in-app profile screens;</li>
+        <li>request deletion of your account and associated data;</li>
+        <li>object to or restrict certain processing;</li>
+        <li>withdraw consent (for example, by disabling notifications);</li>
+        <li>port your information to another service where technically feasible.</li>
+      </ul>
+      <p>
+        To exercise these rights, email{' '}
+        <a href={`mailto:${EMAILS.privacy}`}>{EMAILS.privacy}</a>. We will respond
+        within 30 days.
+      </p>
+
+      <h2>10. Account deletion</h2>
+      <p>
+        You can request account deletion from <em>Settings &rarr; Account &rarr; Delete account</em>{' '}
+        in the app, or by emailing{' '}
+        <a href={`mailto:${EMAILS.privacy}`}>{EMAILS.privacy}</a>. On deletion we
+        permanently remove your profile and content within 30 days, except for records
+        we are legally required to retain.
+      </p>
+
+      <h2>11. Children</h2>
+      <p>
+        Mitraa is intended for users aged <strong>18 years and above</strong>. We do
+        not knowingly collect data from anyone under 18. If you believe a minor has
+        created an account, please report it to{' '}
+        <a href={`mailto:${EMAILS.grievance}`}>{EMAILS.grievance}</a> and we will
+        remove it.
+      </p>
+
+      <h2>12. Security</h2>
+      <p>We use industry-standard safeguards including TLS for data in transit, encryption at rest for sensitive fields, hashed passwords (bcrypt) for any admin accounts, restricted access for staff, audit logging, and regular dependency updates. No system is fully secure; please use a strong, unique authentication method on your device.</p>
+
+      <h2>13. Cookies and similar technologies</h2>
+      <p>Our website uses only essential cookies to remember your preferences. We do not use third-party advertising cookies. The mobile app does not use browser cookies; it does use a local cache stored on your device.</p>
+
+      <h2>14. Third-party links</h2>
+      <p>Our Service may contain links to third-party websites. We are not responsible for their content or privacy practices. Please review their policies before sharing your information with them.</p>
+
+      <h2>15. Changes to this policy</h2>
+      <p>We may update this Policy from time to time. The latest version will always be available on this page, with the &ldquo;Last updated&rdquo; date refreshed. We will notify you of material changes through the app or by email.</p>
+
+      <h2>16. Grievance Officer</h2>
+      <p>In accordance with the Information Technology Act, 2000 and the rules made thereunder, the name and contact details of our Grievance Officer are:</p>
+      <p>
+        Name: <strong>{LEGAL.grievanceOfficerName}</strong><br />
+        Email: <a href={`mailto:${EMAILS.grievance}`}>{EMAILS.grievance}</a><br />
+        Address: {LEGAL.registeredAddress}<br />
+        Time: {LEGAL.grievanceHours}
+      </p>
+
+      <p className="text-text-muted">
+        If anything in this Policy is unclear, please contact us before using the Service.
+      </p>
+    </LegalDoc>
+  );
+}

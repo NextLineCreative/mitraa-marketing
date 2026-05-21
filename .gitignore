@@ -1,9 +1,29 @@
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Node
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/
+*.log
+npm-debug.log*
+
+# IDE / OS
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
-node_modules/
-*.log
 
-# Keep placeholders.json template tracked, but ignore a local override if you ever make one
+# Env
+.env
+.env.*
+!.env.example
+
+# Build/test
+coverage/
+
+# Misc
 placeholders.local.json
