@@ -1,140 +1,131 @@
-# Deploying the Mitraa marketing site to Hostinger
+# Deploying the Mitraa marketing site to Hostinger (Node.js Web App)
 
-We build the Next.js site locally into a static `out/` folder, then upload its
-contents to your Hostinger hosting's `public_html/` directory.
+The marketing site is a full **Next.js** app. We deploy it to Hostinger's
+**Node.js Web App** runtime, which auto-builds from GitHub on every push.
 
-## One-time prerequisites
+You only do the setup below **once**. After that, every `git push` to
+`mitraa-marketing` triggers a redeploy.
 
-1. You own `mitraa.shop` at Hostinger (already done).
-2. You have a Hostinger hosting plan (Premium / Business / Cloud / VPS — any of them works for static files).
-3. The domain `mitraa.shop` is "added" to that hosting plan inside hPanel:
-   - Sign in at **https://hpanel.hostinger.com**
-   - Open **Hosting → (your plan)**
-   - Open **Domains → Add Domain**, enter `mitraa.shop`, complete the steps.
-   - Hostinger will auto-configure the DNS A records pointing to the hosting server (this replaces the GitHub Pages records — if you already added the four `185.199.x.x` records, delete them).
+---
 
-## Step 1 — build locally
+## Prerequisites
 
-```bash
-cd marketing
-npm install           # only the first time
-npm run build         # produces ./out/ with all static HTML/CSS/JS
-```
+- Domain `mitraa.shop` is registered at Hostinger.
+- A Hostinger plan that supports Node.js Web Apps (most paid plans do — Premium / Business / Cloud / VPS).
+- The `mitraa-marketing` repo is public (it is) OR you'll grant Hostinger access to your GitHub account during the import step.
 
-After this `out/` looks like:
+## One-time setup
 
-```
-out/
-├── index.html
-├── 404.html
-├── coins/index.html
-├── privacy/index.html
-├── terms/index.html
-├── refund/index.html
-├── login/index.html
-├── wallet/index.html
-├── favicon.svg
-├── logo.svg
-└── _next/...           # JS + CSS chunks
-```
+### Step 1 — Start the Node.js Web App wizard
+1. Sign in at **https://hpanel.hostinger.com**.
+2. Open **Websites** (or **Hosting** depending on plan) → click **Deploy** / **Create web app** / **Add Website**.
+3. Choose **Node.js Web App** (you've already seen this screen).
+4. Click **Continue with GitHub** on the "Import Git repository" card.
 
-## Step 2 — upload to Hostinger
+### Step 2 — Authorise GitHub access
+1. Hostinger redirects you to GitHub.
+2. Click **Authorize Hostinger**.
+3. Choose **Only select repositories** and pick `NextLineCreative/mitraa-marketing` (safer than granting all repos).
+4. Click **Install & Authorize**.
 
-Three ways. Pick whichever is easiest.
+### Step 3 — Configure the app
+Hostinger should auto-detect Next.js. Confirm or set:
 
-### Option A — File Manager (easiest, no extra software)
+| Field             | Value                                                                |
+|-------------------|----------------------------------------------------------------------|
+| Repository        | `NextLineCreative/mitraa-marketing`                                  |
+| Branch            | `main`                                                               |
+| Root directory    | `/` (the repo root is the app root)                                  |
+| Framework         | **Next.js**                                                          |
+| Node version      | **20** (or the latest 20.x Hostinger offers)                         |
+| Install command   | `npm ci` (preferred) or `npm install`                                |
+| Build command     | `npm run build`                                                      |
+| Start command     | `npm start`                                                          |
+| Listen port       | Use the Hostinger-provided `$PORT` env (default — don't override)    |
+| Environment vars  | (leave empty for now; we add `NEXT_PUBLIC_RAZORPAY_KEY_ID` in Phase 9) |
 
-1. hPanel → **Hosting** → your plan → **File Manager**.
-2. Open `public_html/` (this is the document root for `mitraa.shop`).
-3. Delete the default `default.php` / placeholder files if present.
-4. Click **Upload** and select all contents of your local `marketing/out/` directory.
-   - If the upload UI accepts folders, drag the whole `out/` contents in.
-   - Otherwise, zip the contents of `out/` (NOT the `out` folder itself), upload the zip to `public_html/`, then right-click → **Extract**.
-5. Verify `public_html/index.html` exists at the top level.
-6. Browse to `https://mitraa.shop/` — site is live.
+Hit **Deploy**.
 
-### Option B — SFTP / FTP
+The first deploy takes ~2–4 minutes (Hostinger clones, runs `npm ci`, then `next build`, then `npm start`). You'll see live logs.
 
-Hostinger gives you FTP credentials in **hPanel → Hosting → (plan) → Advanced → FTP Accounts**.
+### Step 4 — Attach the custom domain
+1. Once the app is **Running**, Hostinger gives it a default URL like `xxx.hstn.me`.
+2. In the Node.js Web App settings → **Domains** → **Attach a domain** → choose `mitraa.shop`.
+3. Hostinger configures DNS automatically (it auto-edits the A record for `mitraa.shop` to point at the app's IP).
+4. Hostinger auto-issues a Let's Encrypt SSL cert for `mitraa.shop`. This can take 5–15 min.
+5. Optional: also attach `www.mitraa.shop` and set it to redirect to apex.
 
-```bash
-# Using rsync (Mac/Linux/WSL):
-rsync -avz --delete marketing/out/ <ftp_user>@<ftp_host>:public_html/
+### Step 5 — Confirm everything
 
-# Or any FTP client (FileZilla, Cyberduck, WinSCP):
-#   Host: <Hostinger FTP host>
-#   User: <FTP username>
-#   Pass: <FTP password>
-#   Port: 21 (FTP) or 22 (SFTP)
-#   Remote dir: /public_html/
-```
-
-### Option C — Hostinger CLI (only on VPS plans)
-
-If you have a Hostinger VPS, SSH in and use `git pull` + `npm run build` directly on the server. Out of scope for this MVP.
-
-## Step 3 — confirm
-
-After upload, open these URLs in a browser. All should return HTTP 200:
+After ~10 min, all of these should return HTTP 200:
 
 - `https://mitraa.shop/`
 - `https://mitraa.shop/coins/`
-- `https://mitraa.shop/privacy/`     ← this is the URL Firebase needs
+- `https://mitraa.shop/privacy/`     ← the URL Firebase needs
 - `https://mitraa.shop/terms/`
 - `https://mitraa.shop/refund/`
-- `https://mitraa.shop/login/`       (placeholder; for Phase 9)
-- `https://mitraa.shop/wallet/`      (placeholder; for Phase 9)
+- `https://mitraa.shop/login/`
+- `https://mitraa.shop/wallet/`
 
-If you get **404** on `/coins/` but `/` works, your host doesn't auto-serve `index.html` from subdirectories — drop a small `.htaccess` at `public_html/.htaccess`:
+---
 
-```apache
-DirectoryIndex index.html
-RewriteEngine On
-
-# 1) If path doesn't end with / and there's a matching .html, internally serve it
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME}.html -f
-RewriteRule ^(.*)$ $1.html [L]
-```
-
-(Apache 2.4 default on Hostinger Premium/Business does handle index.html in subdirs. This `.htaccess` is only needed if you see 404s.)
-
-## Step 4 — SSL
-
-Hostinger auto-issues a free Let's Encrypt SSL cert for `mitraa.shop` once the domain is linked to a hosting plan. If `https://` isn't working yet, in hPanel go to **Hosting → SSL/TLS** and click **Install free SSL** for `mitraa.shop`. Then enable **Force HTTPS**.
-
-## Updating the site later
+## Ongoing updates
 
 ```bash
+# Local
 cd marketing
-git pull
-npm install     # if package.json changed
-npm run build
-# upload the new out/ over the old public_html/ contents
+# edit code...
+git add .
+git commit -m "..."
+git push origin main
 ```
 
-For convenience, the `npm run build` step creates the deploy-ready folder in
-**~3 seconds**. Any change to text, prices, or pages = rebuild + re-upload.
+Hostinger detects the push (via webhook GitHub installs during Step 2) and
+redeploys automatically. Watch the build in **hPanel → (your app) → Deployments**.
 
-## When Razorpay arrives (Phase 9)
+Total time from `git push` to live: ~90 seconds.
 
-Before building, set these env vars in your shell so the `/coins` page becomes
-a real buy flow instead of "Coming soon":
+---
 
-```bash
-NEXT_PUBLIC_API_URL=https://api.mitraa.shop NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_live_xxxxx npm run build
-```
+## Environment variables for Phase 9 (Razorpay)
 
-Then re-upload `out/`. Nothing else changes.
+When Razorpay onboarding is done, add these in **hPanel → (your app) → Environment Variables**, then click **Redeploy** (or just push a commit):
 
-## Why not auto-deploy via Hostinger's Git integration?
+| Key                              | Value                          |
+|----------------------------------|--------------------------------|
+| `NEXT_PUBLIC_API_URL`            | `https://api.mitraa.shop`      |
+| `NEXT_PUBLIC_RAZORPAY_KEY_ID`    | `rzp_live_xxxxx` (from Razorpay) |
 
-Hostinger has a "Git" feature in hPanel, but it only does `git pull` — not
-`npm install && npm run build`. Since this site is Next.js, the build step is
-required. So the workflow is: build on your laptop, upload the result.
+The `/coins/` page automatically flips from "Coming soon" to a real buy
+flow as soon as `NEXT_PUBLIC_RAZORPAY_KEY_ID` is set.
 
-If you want full automation later, options:
-- Move from Hostinger shared hosting to **Hostinger VPS** + a small Node CI script.
-- Switch the marketing site to **Vercel** (free; auto-builds on `git push`).
-  Domain stays at Hostinger; only the DNS A record changes to point at Vercel.
+---
+
+## Troubleshooting
+
+**Build fails with "Cannot find module 'next'":**
+- Ensure Install command is `npm ci` or `npm install`, not just `npm`.
+
+**Build succeeds but the app crashes on start:**
+- Check the **Logs** tab. If you see `Error: listen EADDRINUSE`, you've hardcoded a port. The `start` script in this repo uses `next start` (no port flag), which respects Hostinger's `$PORT`.
+
+**Domain attached but 404 or "Default page":**
+- DNS may still be propagating. Wait 15 min and try in an incognito window.
+- Double-check that the app status is **Running** (not Stopped or Crashed).
+
+**`/privacy/` works but `/privacy` (no trailing slash) gives 308:**
+- Expected. `next.config.js` sets `trailingSlash: true`. Hostinger / browsers handle the redirect transparently.
+
+**Deploy webhook not firing on push:**
+- Open **hPanel → (your app) → Settings → GitHub integration → Reconnect**.
+- Or trigger a manual deploy from the **Deployments** tab.
+
+---
+
+## Why this is better than static + manual FTP
+
+- No `npm run build` on your laptop before every change.
+- No FTP credentials to manage.
+- Built-in deploy history with one-click rollback.
+- Full Next.js features available (server components, dynamic routes, server actions) — useful for Phase 9 when we add the buy flow.
+- Same workflow you'll use for the admin panel later.

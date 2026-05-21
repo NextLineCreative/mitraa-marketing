@@ -2,9 +2,9 @@
 
 Marketing + legal + (later) coin-purchase site for **Mitraa**.
 
-Production: `https://mitraa.shop` — hosted on **Hostinger**.
+Production: `https://mitraa.shop` — hosted on **Hostinger Node.js Web App**, auto-deployed from this repo on every push to `main`.
 
-Stack: **Next.js 15** (App Router) + **TypeScript** + **Tailwind CSS** → exported to plain static HTML/CSS/JS for any static host.
+Stack: **Next.js 15** (App Router, SSR) + **TypeScript** + **Tailwind CSS**.
 
 ## Pages
 
@@ -30,18 +30,15 @@ Hot reload, type checks, the works.
 ## Build
 
 ```bash
-npm run build      # produces ./out with all static HTML/JS/CSS
-```
-
-The `out/` directory is the only thing you upload to Hostinger.
-
-```bash
-npm run serve:out  # local preview of the static export at http://localhost:4000
+npm run build      # next build (produces .next/, the Node.js server bundle)
+npm start          # serves the production build locally (respects $PORT)
 ```
 
 ## Deployment
 
-See **[DEPLOY-HOSTINGER.md](DEPLOY-HOSTINGER.md)** for step-by-step Hostinger upload instructions, DNS setup, and `.htaccess` notes.
+Push to `main`. Hostinger auto-builds and redeploys in ~90s.
+
+See **[DEPLOY-HOSTINGER.md](DEPLOY-HOSTINGER.md)** for the one-time setup (Hostinger → Continue with GitHub → pick repo → deploy) and ongoing-update flow.
 
 ## Folder layout
 
