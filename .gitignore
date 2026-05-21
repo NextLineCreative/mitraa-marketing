@@ -1,0 +1,9 @@
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+node_modules/
+*.log
+
+# Keep placeholders.json template tracked, but ignore a local override if you ever make one
+placeholders.local.json

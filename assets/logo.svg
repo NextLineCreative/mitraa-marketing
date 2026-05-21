@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Mitraa logo">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"  stop-color="#c084fc"/>
+      <stop offset="55%" stop-color="#f472b6"/>
+      <stop offset="100%" stop-color="#fb923c"/>
+    </linearGradient>
+  </defs>
+  <!-- rounded square background -->
+  <rect width="120" height="120" rx="26" ry="26" fill="url(#g)"/>
+  <!-- stylised speech-bubble + call dot -->
+  <path d="M28 36 h52 a14 14 0 0 1 14 14 v18 a14 14 0 0 1 -14 14 H58 l-14 12 v-12 H42 a14 14 0 0 1 -14 -14 V50 a14 14 0 0 1 14 -14 z"
+        fill="#0b0f17" opacity="0.92"/>
+  <!-- two small dots indicating conversation -->
+  <circle cx="48" cy="60" r="4" fill="#c084fc"/>
+  <circle cx="62" cy="60" r="4" fill="#f472b6"/>
+  <circle cx="76" cy="60" r="4" fill="#fb923c"/>
+</svg>

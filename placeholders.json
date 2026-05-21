@@ -1,0 +1,12 @@
+{
+  "_comment": "Fill in real values then run scripts/fill-placeholders.js. These render in privacy.html, terms.html, refund.html, index.html.",
+  "COMPANY_NAME": "",
+  "REGISTERED_ADDRESS": "",
+  "JURISDICTION_CITY": "",
+  "CONTACT_EMAIL": "",
+  "SUPPORT_EMAIL": "",
+  "PRIVACY_EMAIL": "",
+  "LEGAL_EMAIL": "",
+  "GRIEVANCE_EMAIL": "",
+  "GRIEVANCE_OFFICER_NAME": ""
+}
