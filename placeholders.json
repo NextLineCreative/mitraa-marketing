@@ -1,12 +1,12 @@
 {
-  "_comment": "Fill in real values then run scripts/fill-placeholders.js. These render in privacy.html, terms.html, refund.html, index.html.",
+  "_comment": "Fill in real values then run scripts/fill-placeholders.js. These render in privacy.html, terms.html, refund.html, index.html, coins.html. Suggested defaults below use mitraa.shop email addresses - if those aren't set up yet at Hostinger, replace each with an existing inbox temporarily.",
   "COMPANY_NAME": "",
   "REGISTERED_ADDRESS": "",
   "JURISDICTION_CITY": "",
-  "CONTACT_EMAIL": "",
-  "SUPPORT_EMAIL": "",
-  "PRIVACY_EMAIL": "",
-  "LEGAL_EMAIL": "",
-  "GRIEVANCE_EMAIL": "",
+  "CONTACT_EMAIL": "hello@mitraa.shop",
+  "SUPPORT_EMAIL": "support@mitraa.shop",
+  "PRIVACY_EMAIL": "privacy@mitraa.shop",
+  "LEGAL_EMAIL": "legal@mitraa.shop",
+  "GRIEVANCE_EMAIL": "grievance@mitraa.shop",
   "GRIEVANCE_OFFICER_NAME": ""
 }
