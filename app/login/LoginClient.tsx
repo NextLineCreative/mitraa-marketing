@@ -247,6 +247,12 @@ function firebaseFriendlyError(err: unknown): string {
     if (code === 'auth/code-expired') return 'Code expired. Request a new one.';
     if (code === 'auth/captcha-check-failed') return 'reCAPTCHA failed. Refresh the page and try again.';
     if (code === 'auth/quota-exceeded') return 'Daily SMS limit reached. Try again tomorrow.';
+    if (code === 'auth/operation-not-allowed')
+      return 'Phone sign-in is temporarily unavailable. Please try again in a few minutes.';
+    if (code === 'auth/unauthorized-domain')
+      return 'This domain is not authorised yet. Please contact support.';
+    if (code === 'auth/missing-recaptcha-token' || code === 'auth/network-request-failed')
+      return 'Network issue verifying reCAPTCHA. Check your connection and try again.';
     return err.message;
   }
   return 'Sign-in failed. Please try again.';
