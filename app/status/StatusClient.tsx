@@ -96,7 +96,6 @@ export default function StatusClient() {
   const mobile: Health = overall === 'loading' ? 'loading' : overall;
   const api: Health = overall;
   const website: Health = 'operational';
-  const admin: Health = overall === 'degraded' ? 'degraded' : 'operational';
 
   const headline =
     overall === 'maintenance'
@@ -146,7 +145,6 @@ export default function StatusClient() {
       <div className="glass rounded-2xl overflow-hidden">
         <ComponentRow name="Mobile App" desc="iOS & Android calling app" health={mobile} />
         <ComponentRow name="Website" desc="mitraa.shop & coin purchases" health={website} />
-        <ComponentRow name="Admin Panel" desc="Internal operations console" health={admin} />
         <ComponentRow name="API & Realtime" desc="Calls, chat, wallet, sockets" health={api} />
       </div>
 
