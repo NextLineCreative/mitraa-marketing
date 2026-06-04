@@ -104,17 +104,33 @@ export default function LoginClient() {
         widgetReady.current = true;
       }
     };
-    const existing = document.getElementById('msg91-otp-provider');
-    if (existing) {
+    // Already loaded (e.g. client-side nav back to /login) — just init.
+    if (window.initSendOTP) {
       init();
       return;
     }
-    const s = document.createElement('script');
-    s.id = 'msg91-otp-provider';
-    s.src = 'https://verify.msg91.com/otp-provider.js';
-    s.async = true;
-    s.onload = init;
-    document.head.appendChild(s);
+    if (document.getElementById('msg91-otp-provider')) return;
+    // MSG91's recommended loader: try the primary CDN, fall back to phone91.
+    const urls = [
+      'https://verify.msg91.com/otp-provider.js',
+      'https://verify.phone91.com/otp-provider.js',
+    ];
+    let idx = 0;
+    const attempt = () => {
+      const s = document.createElement('script');
+      s.id = 'msg91-otp-provider';
+      s.src = urls[idx];
+      s.async = true;
+      s.onload = init;
+      s.onerror = () => {
+        s.remove();
+        idx += 1;
+        if (idx < urls.length) attempt();
+        else setError('Could not load the OTP service. Please refresh and try again.');
+      };
+      document.head.appendChild(s);
+    };
+    attempt();
   }, []);
 
   const sendOtp = useCallback(
