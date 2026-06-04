@@ -2,14 +2,34 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import {
-  type ConfirmationResult,
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
-} from 'firebase/auth';
-import { getFirebaseAuth } from '@/lib/firebase';
 import { apiFetch, ApiFetchError } from '@/lib/api';
 import { setJwt, setUser, type SessionUser } from '@/lib/session';
+
+// MSG91 OTP widget (same widget as the mobile app). Client-side values — they
+// live in the page by design, like the Firebase web config did.
+const WIDGET_ID = process.env.NEXT_PUBLIC_MSG91_WIDGET_ID ?? '';
+const TOKEN_AUTH = process.env.NEXT_PUBLIC_MSG91_WIDGET_TOKEN ?? '';
+
+declare global {
+  interface Window {
+    initSendOTP?: (config: Record<string, unknown>) => void;
+    sendOtp?: (
+      identifier: string,
+      success: (data: unknown) => void,
+      failure: (error: unknown) => void,
+    ) => void;
+    verifyOtp?: (
+      otp: string,
+      success: (data: unknown) => void,
+      failure: (error: unknown) => void,
+    ) => void;
+    retryOtp?: (
+      channel: unknown,
+      success: (data: unknown) => void,
+      failure: (error: unknown) => void,
+    ) => void;
+  }
+}
 
 type Step = 'phone' | 'otp' | 'success';
 
@@ -22,10 +42,35 @@ interface VerifyOtpResponse {
 function normalisePhone(raw: string): string {
   const digits = raw.replace(/[^\d]/g, '');
   if (raw.trim().startsWith('+')) return '+' + digits;
-  // Default Indian +91 if the user typed a 10-digit number
   if (digits.length === 10) return '+91' + digits;
   if (digits.length === 12 && digits.startsWith('91')) return '+' + digits;
   return '+' + digits;
+}
+
+/** Pull the access-token / message string out of an MSG91 callback payload. */
+function msgValue(data: unknown): string | null {
+  if (typeof data === 'string') return data;
+  if (data && typeof data === 'object') {
+    const m = data as Record<string, unknown>;
+    const v = m.message ?? m['access-token'] ?? m.accessToken ?? m.token;
+    return v != null ? String(v) : null;
+  }
+  return null;
+}
+
+function msgError(err: unknown): string {
+  if (err instanceof ApiFetchError) {
+    if (err.error.code === 'OTP_TOKEN_INVALID') return 'OTP verification failed. Try again.';
+    if (err.error.code === 'USER_BANNED') return 'This account has been suspended. Contact support.';
+    return err.message || 'Sign-in failed. Please try again.';
+  }
+  if (typeof err === 'string' && err.trim()) return err;
+  if (err && typeof err === 'object') {
+    const m = err as Record<string, unknown>;
+    const msg = m.message ?? m.error ?? m.type;
+    if (msg != null) return String(msg);
+  }
+  return 'Something went wrong. Please try again.';
 }
 
 export default function LoginClient() {
@@ -38,16 +83,38 @@ export default function LoginClient() {
   const [otp, setOtp] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const widgetReady = useRef(false);
 
-  // Hold the in-flight Firebase confirmation result + the verifier across renders.
-  const confirmationRef = useRef<ConfirmationResult | null>(null);
-  const verifierRef = useRef<RecaptchaVerifier | null>(null);
-
+  // Load the MSG91 OTP widget script once + initialise it with exposeMethods so
+  // we can drive send/verify from our own UI.
   useEffect(() => {
-    return () => {
-      verifierRef.current?.clear();
-      verifierRef.current = null;
+    if (!WIDGET_ID || !TOKEN_AUTH) {
+      setError('Login is temporarily unavailable. Please try again later.');
+      return;
+    }
+    const init = () => {
+      if (window.initSendOTP && !widgetReady.current) {
+        window.initSendOTP({
+          widgetId: WIDGET_ID,
+          tokenAuth: TOKEN_AUTH,
+          exposeMethods: true,
+          success: () => {},
+          failure: () => {},
+        });
+        widgetReady.current = true;
+      }
     };
+    const existing = document.getElementById('msg91-otp-provider');
+    if (existing) {
+      init();
+      return;
+    }
+    const s = document.createElement('script');
+    s.id = 'msg91-otp-provider';
+    s.src = 'https://verify.msg91.com/otp-provider.js';
+    s.async = true;
+    s.onload = init;
+    document.head.appendChild(s);
   }, []);
 
   const sendOtp = useCallback(
@@ -59,33 +126,20 @@ export default function LoginClient() {
         setError('Please enter a valid phone number (10 digits for India).');
         return;
       }
-
+      if (!window.sendOtp) {
+        setError('OTP service is still loading. Please wait a moment and retry.');
+        return;
+      }
       setBusy(true);
       try {
-        const auth = getFirebaseAuth();
-
-        if (!verifierRef.current) {
-          verifierRef.current = new RecaptchaVerifier(auth, 'recaptcha-container', {
-            size: 'invisible',
-          });
-        }
-
-        const confirmation = await signInWithPhoneNumber(
-          auth,
-          normalised,
-          verifierRef.current,
-        );
-        confirmationRef.current = confirmation;
+        // MSG91 wants country code + number, no leading +.
+        const mobile = normalised.replace(/\D/g, '');
+        await new Promise<void>((resolve, reject) => {
+          window.sendOtp!(mobile, () => resolve(), (e) => reject(e));
+        });
         setStep('otp');
       } catch (err) {
-        // Reset reCAPTCHA on failure so the next attempt isn't poisoned
-        try {
-          verifierRef.current?.clear();
-        } catch {
-          // ignore
-        }
-        verifierRef.current = null;
-        setError(firebaseFriendlyError(err));
+        setError(msgError(err));
       } finally {
         setBusy(false);
       }
@@ -101,29 +155,38 @@ export default function LoginClient() {
         setError('Enter the 6-digit code we sent you.');
         return;
       }
-      if (!confirmationRef.current) {
+      if (!window.verifyOtp) {
         setError('Session expired. Please request a new OTP.');
         setStep('phone');
         return;
       }
-
       setBusy(true);
       try {
-        const credential = await confirmationRef.current.confirm(otp);
-        const idToken = await credential.user.getIdToken();
-
-        const result = await apiFetch<VerifyOtpResponse>('/api/auth/verify-otp', {
-          method: 'POST',
-          body: { idToken },
-          authed: false,
+        const accessToken = await new Promise<string>((resolve, reject) => {
+          window.verifyOtp!(
+            otp,
+            (data) => {
+              const token = msgValue(data);
+              if (token) resolve(token);
+              else reject(new Error('Verification returned no token.'));
+            },
+            (e) => reject(e),
+          );
         });
+
+        // Backend re-verifies the token with MSG91 + issues our JWT (same
+        // endpoint the mobile app uses).
+        const result = await apiFetch<VerifyOtpResponse>(
+          '/api/auth/otp/msg91/verify-token',
+          { method: 'POST', body: { accessToken }, authed: false },
+        );
 
         setJwt(result.token);
         setUser(result.user);
         setStep('success');
         router.replace(next);
       } catch (err) {
-        setError(firebaseFriendlyError(err));
+        setError(msgError(err));
       } finally {
         setBusy(false);
       }
@@ -141,8 +204,6 @@ export default function LoginClient() {
 
   return (
     <>
-      <div id="recaptcha-container" />
-
       {step === 'phone' && (
         <form onSubmit={sendOtp} className="rounded-xl border border-border bg-bg-elev p-6">
           <label htmlFor="phone" className="block text-sm font-medium mb-2">
@@ -153,7 +214,7 @@ export default function LoginClient() {
             type="tel"
             inputMode="tel"
             autoComplete="tel"
-            placeholder="9000000001"
+            placeholder="98765 43210"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             disabled={busy}
@@ -230,30 +291,4 @@ export default function LoginClient() {
       )}
     </>
   );
-}
-
-function firebaseFriendlyError(err: unknown): string {
-  if (err instanceof ApiFetchError) {
-    if (err.error.code === 'INVALID_FIREBASE_TOKEN') return 'OTP verification failed. Try again.';
-    if (err.error.code === 'USER_BANNED') return 'This account has been suspended. Contact support.';
-    return err.message || 'Sign-in failed. Please try again.';
-  }
-  if (err instanceof Error) {
-    // Firebase error codes look like 'auth/invalid-phone-number'
-    const code = (err as { code?: string }).code ?? '';
-    if (code === 'auth/invalid-phone-number') return 'That phone number doesn\'t look right.';
-    if (code === 'auth/too-many-requests') return 'Too many attempts. Please try again later.';
-    if (code === 'auth/invalid-verification-code') return 'Wrong code. Please re-check the SMS.';
-    if (code === 'auth/code-expired') return 'Code expired. Request a new one.';
-    if (code === 'auth/captcha-check-failed') return 'reCAPTCHA failed. Refresh the page and try again.';
-    if (code === 'auth/quota-exceeded') return 'Daily SMS limit reached. Try again tomorrow.';
-    if (code === 'auth/operation-not-allowed')
-      return 'Phone sign-in is temporarily unavailable. Please try again in a few minutes.';
-    if (code === 'auth/unauthorized-domain')
-      return 'This domain is not authorised yet. Please contact support.';
-    if (code === 'auth/missing-recaptcha-token' || code === 'auth/network-request-failed')
-      return 'Network issue verifying reCAPTCHA. Check your connection and try again.';
-    return err.message;
-  }
-  return 'Sign-in failed. Please try again.';
 }
