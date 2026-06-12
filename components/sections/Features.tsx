@@ -7,8 +7,8 @@ const FEATURES = [
   },
   {
     icon: 'coin',
-    title: 'Pay by the minute',
-    body: 'Buy coins, talk by the minute. No subscriptions, no monthly fees, no auto-renew traps.',
+    title: 'No subscriptions',
+    body: 'Buy coins once and use them whenever you like. No monthly fees, no auto-renew traps.',
     accent: 'from-amber-400 to-pink-500',
   },
   {

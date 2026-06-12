@@ -5,7 +5,7 @@ import { useState } from 'react';
 const FAQS = [
   {
     q: 'How do coins work?',
-    a: 'Coins are Mitraa\'s in-app currency. Buy a pack once, then spend coins by the minute on calls and chats. Each host sets their own rate. Coins never expire.',
+    a: 'Coins are Mitraa\'s in-app currency. Buy a pack once and use coins for calls, chats and gifts — each host sets their own rate. Coins never expire.',
   },
   {
     q: 'Is Mitraa free to download?',

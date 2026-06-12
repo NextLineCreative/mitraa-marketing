@@ -19,8 +19,9 @@ export default function Download() {
               <span className="gradient-text">someone real?</span>
             </h2>
             <p className="text-text-dim text-lg max-w-xl mx-auto mb-9">
-              Download Mitraa, recharge in 30 seconds, and have your first call within minutes.
-              Free to download. Free to browse. Pay only when you call.
+              Download Mitraa, set up your profile in 30 seconds, and have your
+              first call within minutes. Free to download. Free to browse.
+              Connect when you&apos;re ready.
             </p>
 
             <div className="flex flex-wrap gap-3 justify-center">

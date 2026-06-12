@@ -16,8 +16,8 @@ export default function Footer() {
               <span className="gradient-text">{SITE.brand}</span>
             </div>
             <p className="mt-4 text-text-dim text-sm leading-relaxed max-w-xs">
-              India&apos;s social calling platform — discover real people, talk
-              by the minute, on your terms.
+              India&apos;s social calling platform — discover real people and
+              have real conversations, on your terms.
             </p>
             <div className="mt-5 flex items-center gap-3">
               <a

@@ -23,11 +23,11 @@ export default function Hero() {
             </div>
             <h1 className="text-[clamp(2.4rem,5.5vw,4.5rem)] font-extrabold tracking-tight leading-[1.02] mb-5">
               Talk to someone <span className="gradient-text">real</span>.<br />
-              <span className="text-text-dim">Pay only by the minute.</span>
+              <span className="text-text-dim">Real conversations, anytime.</span>
             </h1>
             <p className="text-[1.15rem] text-text-dim mb-8 max-w-[580px] lg:mx-0 mx-auto leading-relaxed">
-              Mitraa is the social calling app where you discover hand-verified
-              hosts, start a voice or video call, and pay for the time you actually use.
+              Mitraa is India&apos;s social calling app — discover hand-verified
+              hosts and connect over voice or video calls.
               No subscriptions. No surprises.
             </p>
             <div className="flex gap-3 flex-wrap justify-center lg:justify-start mb-6">
