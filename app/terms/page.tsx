@@ -69,12 +69,12 @@ export default function TermsPage() {
         <li>Mitraa coins (&ldquo;Coins&rdquo;) are a <strong>virtual in-app item</strong>. They are not money, securities, or a stored-value instrument under the Reserve Bank of India&apos;s Prepaid Payment Instruments framework.</li>
         <li>Coins have no cash value, cannot be transferred between accounts (except as part of in-app gifting), and cannot be redeemed by users for cash.</li>
         <li>Coins may expire or be revoked if your account is closed, suspended, or found to be in violation of these Terms.</li>
-        <li>Coins purchased through Razorpay are subject to the <a href="/refund/">Refund Policy</a>.</li>
+        <li>Coins purchased through Google Play or Razorpay are subject to the <a href="/refund/">Refund Policy</a>.</li>
         <li>We may, at our sole discretion, modify the price, denomination, exchange rate, or features associated with Coins at any time.</li>
       </ul>
 
       <h2>6. Payments</h2>
-      <p>Payments are processed by Razorpay Software Private Limited. By making a payment, you also agree to Razorpay&apos;s terms. All prices are inclusive of applicable taxes unless stated otherwise. We reserve the right to refuse, cancel, or limit any order if we suspect fraud, abuse, or a violation of these Terms.</p>
+      <p>If you purchase Coins in the Mitraa Android app downloaded from Google Play, the purchase is processed by <strong>Google Play Billing</strong> and is additionally subject to the Google Play Terms of Service and Google Play&apos;s refund policies. If you purchase Coins on our website, the purchase is processed by <strong>Razorpay Software Private Limited</strong> and you also agree to Razorpay&apos;s terms. All prices are inclusive of applicable taxes unless stated otherwise. We reserve the right to refuse, cancel, or limit any order if we suspect fraud, abuse, or a violation of these Terms. Google is not a party to these Terms and has no obligation to provide the Service.</p>
 
       <h2>7. Hosts</h2>
       <p>Hosts are individual users who provide their time on the Service in exchange for Coins. By applying to become a host, you additionally agree that:</p>
@@ -87,8 +87,8 @@ export default function TermsPage() {
         <li>Recording, streaming, screen-grabbing, or otherwise capturing a call without the other party&apos;s consent is strictly prohibited.</li>
       </ul>
 
-      <h2>8. Reports and moderation</h2>
-      <p>Any user can report another user via the in-app reporting flow. We review reports in good faith and may take action including warning, hiding content, suspending, or terminating an account. We may also remove content or restrict access without prior notice if required by law or in response to a credible safety risk.</p>
+      <h2>8. Reports, blocking and moderation</h2>
+      <p>Any user can <strong>report</strong> another user or specific content via the in-app reporting flow, and can <strong>block</strong> any user at any time to stop all calls and messages from them. We review reports in good faith and may take action including warning, hiding content, suspending, or terminating an account. We may also remove content or restrict access without prior notice if required by law or in response to a credible safety risk.</p>
 
       <h2>9. Intellectual property</h2>
       <p>The Mitraa name, logo, designs, and all software and content we provide are owned by us or our licensors and are protected by intellectual property laws. We grant you a limited, non-exclusive, non-transferable, revocable licence to use the Service for personal, non-commercial purposes in accordance with these Terms.</p>
@@ -150,12 +150,6 @@ export default function TermsPage() {
         <a href={`mailto:${EMAILS.legal}`}>{EMAILS.legal}</a>. For grievances under
         the Information Technology Act, 2000, see Section 16 of our{' '}
         <a href="/privacy/">Privacy Policy</a>.
-      </p>
-
-      <p className="text-text-muted">
-        This document is a template adapted for Mitraa. Before going live, please
-        have it reviewed by a qualified Indian lawyer, particularly the sections
-        concerning virtual coins, host payouts, TDS, and arbitration.
       </p>
     </LegalDoc>
   );

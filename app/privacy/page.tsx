@@ -41,7 +41,7 @@ export default function PrivacyPage() {
       <ul>
         <li><strong>Account information</strong> — your phone number (verified via one-time password), display name, profile photo, gender, date of birth, language preference, and bio.</li>
         <li><strong>Host application data</strong> (only if you apply to become a host) — additional profile photos, an introduction video, languages spoken, tags describing your interests, your per-minute call rate, and government-issued identification we may request for verification.</li>
-        <li><strong>Payment information</strong> — for coin purchases, payment is processed by Razorpay. We receive transaction references but do not store your full card number, UPI PIN, or net-banking credentials.</li>
+        <li><strong>Payment information</strong> — coin purchases made in the Android app distributed via Google Play are processed by <strong>Google Play Billing</strong>; Google provides us with order and entitlement information but we never see your card or UPI details. Coin purchases made on our website are processed by <strong>Razorpay</strong>, from which we receive transaction references only. We do not store your full card number, UPI PIN, or net-banking credentials.</li>
         <li><strong>Payout information</strong> (hosts only) — UPI ID or bank account details for receiving withdrawals.</li>
         <li><strong>Content you share</strong> — chat messages, gifts, and any media you upload.</li>
         <li><strong>Reports and feedback</strong> — content you submit when reporting another user.</li>
@@ -101,7 +101,8 @@ export default function PrivacyPage() {
           <ul>
             <li>Firebase (Google) — phone OTP verification, push notifications, crash analytics.</li>
             <li>Agora — real-time voice and video transport (we do not record calls).</li>
-            <li>Razorpay — payment processing for coin purchases.</li>
+            <li>Google Play Billing — processing of in-app coin purchases in the Android app, including order IDs and purchase tokens.</li>
+            <li>Razorpay — payment processing for coin purchases made on our website.</li>
             <li>Amazon Web Services — hosting of our servers and storage of profile / chat media in India region (<code>ap-south-1</code>).</li>
             <li>SMS providers used by Firebase for OTP delivery.</li>
           </ul>

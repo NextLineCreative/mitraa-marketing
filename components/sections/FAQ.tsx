@@ -21,11 +21,11 @@ const FAQS = [
   },
   {
     q: 'What payment methods are supported?',
-    a: 'UPI, debit/credit cards, netbanking, and popular wallets — all via Razorpay (India). Receipts are emailed automatically.',
+    a: 'In the Android app, coin purchases go through Google Play (UPI, cards, and every method Play supports). On the website, payments are processed by Razorpay (UPI, debit/credit cards, netbanking, wallets).',
   },
   {
     q: 'Can I get a refund?',
-    a: 'Unused coins are refundable within 7 days of purchase if you contact privacy@mitraa.shop. See our Refund Policy for full terms.',
+    a: 'Coin purchases are generally final once credited. Refunds are considered for duplicate charges, failed coin delivery, or unauthorised transactions — and app purchases are also covered by Google Play’s refund policy. See our Refund Policy for full terms.',
   },
   {
     q: 'How do you verify hosts?',

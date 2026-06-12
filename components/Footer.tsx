@@ -59,6 +59,8 @@ export default function Footer() {
               <li><Link href="/terms/"   className="text-text-dim hover:text-text">Terms</Link></li>
               <li><Link href="/refund/"  className="text-text-dim hover:text-text">Refunds</Link></li>
               <li><Link href="/referral-terms/" className="text-text-dim hover:text-text">Referral Terms</Link></li>
+              <li><Link href="/child-safety/" className="text-text-dim hover:text-text">Child Safety</Link></li>
+              <li><Link href="/delete-account/" className="text-text-dim hover:text-text">Delete Account</Link></li>
               <li><Link href="/status/"  className="text-text-dim hover:text-text">System status</Link></li>
               <li><a href={`mailto:${EMAILS.grievance}`} className="text-text-dim hover:text-text">Grievance</a></li>
             </ul>

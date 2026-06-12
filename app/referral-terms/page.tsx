@@ -104,12 +104,6 @@ export default function ReferralTermsPage() {
         Questions about the referral program? Write to{' '}
         <a href={`mailto:${EMAILS.support}`}>{EMAILS.support}</a>.
       </p>
-
-      <p className="text-text-muted">
-        This document is a template adapted for Mitraa. Before going live, please
-        have it reviewed by a qualified Indian lawyer, particularly the sections on
-        virtual coins, clawback, and tax.
-      </p>
     </LegalDoc>
   );
 }
