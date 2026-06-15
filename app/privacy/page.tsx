@@ -39,7 +39,7 @@ export default function PrivacyPage() {
 
       <h3>2.1 Information you provide</h3>
       <ul>
-        <li><strong>Account information</strong> — your phone number (verified via one-time password), display name, profile photo, gender, date of birth, language preference, and bio.</li>
+        <li><strong>Account information</strong> — your phone number (verified via one-time password), display name, profile photo, gender, language preference, and bio.</li>
         <li><strong>Host application data</strong> (only if you apply to become a host) — additional profile photos, an introduction video, languages spoken, tags describing your interests, your per-minute call rate, and government-issued identification we may request for verification.</li>
         <li><strong>Payment information</strong> — coin purchases made in the Android app distributed via Google Play are processed by <strong>Google Play Billing</strong>; Google provides us with order and entitlement information but we never see your card or UPI details. Coin purchases made on our website are processed by <strong>Razorpay</strong>, from which we receive transaction references only. We do not store your full card number, UPI PIN, or net-banking credentials.</li>
         <li><strong>Payout information</strong> (hosts only) — UPI ID or bank account details for receiving withdrawals.</li>

@@ -29,8 +29,8 @@ export default function ChildSafetyPage() {
       <h2>1. Prevention</h2>
       <ul>
         <li>
-          Every user must declare a date of birth confirming they are 18 or
-          older before using the Service.
+          Every user must confirm they are 18 years of age or older before they
+          can complete sign-up and use the Service.
         </li>
         <li>
           Hosts undergo identity (KYC) verification, including
