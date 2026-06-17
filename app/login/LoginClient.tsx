@@ -84,10 +84,21 @@ function googleError(err: unknown): string {
   return msgError(err);
 }
 
+// SECURITY: only allow same-origin relative redirects so an attacker-supplied
+// absolute/protocol-relative ?next= can't bounce a freshly-logged-in user to a
+// phishing site after auth (open redirect).
+function safeNext(raw: string | null, fallback: string): string {
+  if (!raw) return fallback;
+  if (raw.startsWith('/') && !raw.startsWith('//') && !raw.includes('://') && !raw.startsWith('/\\')) {
+    return raw;
+  }
+  return fallback;
+}
+
 export default function LoginClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const next = searchParams.get('next') || '/wallet/';
+  const next = safeNext(searchParams.get('next'), '/wallet/');
 
   const [step, setStep] = useState<Step>('phone');
   const [phone, setPhone] = useState('');
