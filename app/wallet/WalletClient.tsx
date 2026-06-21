@@ -69,7 +69,8 @@ export default function WalletClient() {
           router.replace('/login/?next=/wallet/');
           return;
         }
-        setError(err instanceof Error ? err.message : 'Could not load wallet');
+        // Do not echo raw server error text on this financial surface (MKTG-04).
+        setError('Could not load wallet');
       } finally {
         if (!cancelled) setLoading(false);
       }

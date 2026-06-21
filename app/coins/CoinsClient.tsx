@@ -188,9 +188,10 @@ export default function CoinsClient() {
             router.push('/login/?next=/coins/');
             return;
           }
-          setError(err.message);
+          // Do not echo raw server error text on this payment surface (MKTG-04).
+          setError('Payment could not be completed. Please try again.');
         } else if (err instanceof Error) {
-          setError(err.message);
+          setError('Payment could not be completed. Please try again.');
         } else {
           setError('Something went wrong. Please try again.');
         }

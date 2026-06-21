@@ -76,6 +76,21 @@ function fmtCoins(n: number) {
   return n.toLocaleString('en-IN');
 }
 
+// Mask a UPI handle for the history list so the full payout identifier is not
+// shown in plaintext (MKTG-03). e.g. 'rahul123@oksbi' -> 'ra···@oksbi'.
+function maskUpi(upi: string | null): string {
+  if (!upi) return '';
+  const at = upi.lastIndexOf('@');
+  if (at <= 0) {
+    // No recognisable @bank suffix — keep only the first two chars.
+    return upi.length <= 2 ? '··' : `${upi.slice(0, 2)}···`;
+  }
+  const local = upi.slice(0, at);
+  const suffix = upi.slice(at); // includes the '@'
+  const prefix = local.length <= 2 ? local : local.slice(0, 2);
+  return `${prefix}···${suffix}`;
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function WithdrawClient() {
@@ -117,7 +132,8 @@ export default function WithdrawClient() {
         setLoadErr('This page is for approved Mitraa hosts only. Open the app and apply to become a host.');
         return;
       }
-      setLoadErr(err instanceof Error ? err.message : 'Could not load your wallet. Please refresh.');
+      // Do not echo raw server error text on this financial surface (MKTG-04).
+      setLoadErr('Could not load your wallet. Please refresh.');
     } finally {
       setLoading(false);
     }
@@ -192,7 +208,8 @@ export default function WithdrawClient() {
         else if (err.error.code === 'HOST_NOT_APPROVED')
           setFormErr('Your host account is pending approval. You can withdraw once approved.');
         else
-          setFormErr(err.message || 'Withdrawal request failed. Please try again.');
+          // Do not echo raw server error text for unmapped codes (MKTG-04).
+          setFormErr('Withdrawal request failed. Please try again.');
       } else {
         setFormErr('Withdrawal request failed. Please try again.');
       }
@@ -415,7 +432,7 @@ export default function WithdrawClient() {
                   </div>
                   <div className="text-xs text-text-muted mt-0.5">
                     {w.method === 'upi'
-                      ? `UPI · ${w.upiId}`
+                      ? `UPI · ${maskUpi(w.upiId)}`
                       : `Bank · ${w.bankHolderName} · ···${(w.bankAccountNumber ?? '').slice(-4)}`}
                   </div>
                   <div className="text-xs text-text-muted mt-0.5">{fmtDate(w.createdAt)}</div>
